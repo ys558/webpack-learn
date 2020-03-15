@@ -1,5 +1,7 @@
 const path = require('path')
 const htmlWebpackPlugins = require('html-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const  MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
 module.exports = {
   // 1. 入口文件
@@ -9,7 +11,7 @@ module.exports = {
   entry: {
     index: './src/index.js',
     login: './src/login.js',
-  }, 
+  },
   // 2. 输出结构
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -17,8 +19,8 @@ module.exports = {
     // filename: 'main.js',
     // 2.2 多入口文件: 使用占位符[name]对应entry.main, 若entry没有指定对象名字, 则默认打包成main.js
     // [hash:6]为版本控制的hash码, 6为指定位数, 如果某一源文件改动,hash码才会触发改动:
-    // filename: '[name]-[hash:6].js',
-    filename: '[name].js'
+    filename: '[name]-[chunkhash:6].js',
+    // filename: '[name].js'
   },
   // 3. 打包环境
   mode: 'development',
@@ -51,7 +53,13 @@ module.exports = {
       {
         // !!!!注意: less-loader安装:  npm i -D less less-loader 官方文档错了, 没有安装less
         test: /\.(css|less)$/,
-        use: ['style-loader', 'css-loader', 'less-loader', //'postcss-loader'
+        use: [
+            // 4. 普通配置,css会写在html里:
+            // 'style-loader', 
+            // 7. 让css成为单独的文件: 须配合MiniCssExtractPlugin使用:
+            MiniCssExtractPlugin.loader,
+            'css-loader', 
+            'less-loader', //'postcss-loader'
           // 'postcss-loader'也可以写成下面这种, 不独立成文件:
           {
             //4.5 加css前缀,兼容各种浏览器: npm i postcss-loader autoprefixer -D
@@ -84,7 +92,7 @@ module.exports = {
   plugins: [
     // 5.2 多html文件配置: new两个htmlWebpackPlugins配置, 并配置chunks
     new htmlWebpackPlugins({
-      chunks:['index'],
+      chunks: ['index'],
       title: '首页', //源html文件里, 标题须要写成ejs模板语法才能支持
       template: './src/index.html',
       //  true | 'head' | 'body' | false ,注⼊所有的资源到特定的 template 或者 templateContent 中，如果设置为 true 或者body，所有的 javascript 资源将被放置到 body 元素的底部，'head' 将放置到 head 元素中。
@@ -99,11 +107,18 @@ module.exports = {
       // excludeChunks: 允许跳过某些块，(⽐如，跳过单元测试的块)
     }),
     new htmlWebpackPlugins({
-      chunks:['login'],
-      title: '登录', 
+      chunks: ['login'],
+      title: '登录',
       template: './src/login.html',
       inject: true,
       filename: 'login.html',
+    }),
+    // 6. 把上一次构建的东西清除: 这里解构出来是符合官方文档的规定:
+    new CleanWebpackPlugin({}),
+    // 7. 把css抽离成单独的文件:
+    new MiniCssExtractPlugin({
+      // 7.1 contenthash, 内容变了hash值才会改变: 和chunkhash的区别, 因为css文件是从导入到index.js文件才能使用的, 如果index.js的内容发生改变, 导入在里面的css文件内容没变,css文件的hash值就不会改变
+      filename: '[name]-[contenthash:6].css'
     })
   ]
 }

@@ -1,9 +1,10 @@
 const path = require('path')
 
+
 module.exports = {
   // 1. 入口文件
   // 1.1 单入口文件:
-  entry: './src/index.js', 
+  entry: './src/index.js',
   // 1.2 多入口文件:
   // entry: {
   //   index: './src/index.js',
@@ -20,10 +21,10 @@ module.exports = {
     filename: '[name].js'
   },
   // 3. 打包环境
-  mode:'development',
+  mode: 'development',
   // 4. 模块处理:
   module: {
-    rules:[ 
+    rules: [
       {
         test: /\.(png|jpg?g|gif)$/,
         // 4.1 file-loader: 静态文件读取:
@@ -34,6 +35,7 @@ module.exports = {
           options: { // 可配置移动到哪个目录:
             name: '[name]-[hash:6].[ext]', // 占位符替代
             outputPath: "images/", // 输出路径
+            // !!!注意: limit在移动端最常用:
             limit: 2048, //⼩于2048, 即2kb时，图片自动转换成base64的js代码, 不再独立生成文件
           }
         }
@@ -49,9 +51,23 @@ module.exports = {
       {
         // !!!!注意: less-loader安装:  npm i -D less less-loader 官方文档错了, 没有安装less
         test: /\.(css|less)$/,
-        use: ['style-loader', 'css-loader', 'less-loader']
+        use: ['style-loader', 'css-loader', 'less-loader', //'postcss-loader'
+          // 'postcss-loader'也可以写成下面这种, 不独立成文件:
+          {
+            //4.5 加css前缀,兼容各种浏览器: npm i postcss-loader autoprefixer -D
+            loader: 'postcss-loader',
+            options: {
+              plugins: [
+                require('autoprefixer')({
+                  //autoprefixer新版本中browsers替换成overrideBrowserslist,
+                  // 后两个版本, 占有率大于1%
+                  overrideBrowserslist: ["last 2 versions", ">1%"]
+                })]
+            }
+          }
+        ]
       }
-    ], 
+    ],
   },
   /*开启监听模式: watch: true, 
   另一种方法: package.json添加软链接 "watch": "webpack --watch",*/
@@ -62,5 +78,4 @@ module.exports = {
     aggregateTimeout: 300, //监听到⽂件变化后，等300ms再去执⾏，默认300ms,
     // poll: 1000 //判断⽂件是否发⽣变化是通过不停的询问系统指定⽂件有没有变化，默认每秒问1次
   },
-  // 5. 插件:
 }

@@ -1,2 +1,2 @@
 document.write('hahaha')
-alert('hehe??!!!')
+console.log('11111111111111')

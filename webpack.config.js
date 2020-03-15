@@ -1,15 +1,15 @@
 const path = require('path')
-
+const htmlWebpackPlugins = require('html-webpack-plugin')
 
 module.exports = {
   // 1. 入口文件
   // 1.1 单入口文件:
-  entry: './src/index.js',
+  // entry: './src/index.js',
   // 1.2 多入口文件:
-  // entry: {
-  //   index: './src/index.js',
-  //   login: './src/login.js',
-  // }, 
+  entry: {
+    index: './src/index.js',
+    login: './src/login.js',
+  }, 
   // 2. 输出结构
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -78,4 +78,32 @@ module.exports = {
     aggregateTimeout: 300, //监听到⽂件变化后，等300ms再去执⾏，默认300ms,
     // poll: 1000 //判断⽂件是否发⽣变化是通过不停的询问系统指定⽂件有没有变化，默认每秒问1次
   },
+  // 5. 插件:
+  // 5.1 html-webpack-plugin
+  // npm install --save-dev html-webpack-plugin
+  plugins: [
+    // 5.2 多html文件配置: new两个htmlWebpackPlugins配置, 并配置chunks
+    new htmlWebpackPlugins({
+      chunks:['index'],
+      title: '首页', //源html文件里, 标题须要写成ejs模板语法才能支持
+      template: './src/index.html',
+      //  true | 'head' | 'body' | false ,注⼊所有的资源到特定的 template 或者 templateContent 中，如果设置为 true 或者body，所有的 javascript 资源将被放置到 body 元素的底部，'head' 将放置到 head 元素中。
+      inject: true,
+      filename: 'index.html',
+      hash: true, //如果为 true, 将添加⼀个唯⼀的 webpack 编译hash 到所有包含的脚本和 CSS ⽂件，对于解除 cache 很有⽤。
+      cache: true, //默认值true，仅在⽂件修改之后才会发布⽂件。
+      // 其余常用参数:
+      // showErrors: true | false, 如果为 true, 这是默认值，错误信息会写⼊到 HTML ⻚⾯中
+      // chunks: 允许只添加某些块 (⽐如，仅仅 unit test 块),
+      // chunksSortMode: 允许控制块在添加到⻚⾯之前的排序⽅式，⽀持的值：'none' | 'default' | {function}-default:'auto'
+      // excludeChunks: 允许跳过某些块，(⽐如，跳过单元测试的块)
+    }),
+    new htmlWebpackPlugins({
+      chunks:['login'],
+      title: '登录', 
+      template: './src/login.html',
+      inject: true,
+      filename: 'login.html',
+    })
+  ]
 }

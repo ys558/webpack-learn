@@ -120,5 +120,11 @@ module.exports = {
       // 7.1 contenthash, 内容变了hash值才会改变: 和chunkhash的区别, 因为css文件是从导入到index.js文件才能使用的, 如果index.js的内容发生改变, 导入在里面的css文件内容没变,css文件的hash值就不会改变
       filename: '[name]-[contenthash:6].css'
     })
-  ]
+  ],
+  // 8. 开发工具，多用于定位源代码错误：
+  // https://webpack.js.org/configuration/devtool#devtool
+  // devtool: 'source-map' | 'eval' | 'cheap' | 'Module' | 'inline'
+  // 多可组合使用：
+  devtool:"cheap-module-eval-source-map",// 开发环境配置
+  // devtool:"cheap-module-inline-source-map", // 线上⽣成配置
 }

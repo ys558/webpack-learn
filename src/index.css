@@ -1,0 +1,15 @@
+@font-face {
+  font-family: 'webfont';
+  font-display: swap;
+  src: url('webfont.woff2') format('woff'); /* chrome、firefox */
+}
+
+
+body {
+  background-color: blanchedalmond;
+  font-family: 'webfont' !important;
+  font-size: 32px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

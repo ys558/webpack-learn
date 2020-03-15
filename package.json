@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "webpack",
+    "dev": "npx webpack",
+    "pro":"npx webpack --config ./webpack.config.production.js",
     "build": "./node_modules/.bin/webpack",
     "build-pro": "npx webpack --config webpack.config.prod.js"
   },

@@ -12,4 +12,4 @@ const root = document.getElementById('root')
 root.append(img)
 
 document.write('hello webpack, 哈哈哈哈哈')
-console.log('hello!!!!!!??!!!')
+console.lo('hello!!!!!!??!!!')

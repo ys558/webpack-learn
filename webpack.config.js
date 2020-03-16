@@ -123,8 +123,27 @@ module.exports = {
   ],
   // 8. 开发工具，多用于定位源代码错误：
   // https://webpack.js.org/configuration/devtool#devtool
-  // devtool: 'source-map' | 'eval' | 'cheap' | 'Module' | 'inline'
+  // devtool: 'source-map' | 'eval' | 'cheap' | 'Module' | 'inline-source-map'
   // 多可组合使用：
-  devtool:"cheap-module-eval-source-map",// 开发环境配置
-  // devtool:"cheap-module-inline-source-map", // 线上⽣成配置
+  devtool:"inline-source-map",// 开发环境配置
+  // devtool:"cheap-module-inline-source-map", // 生产环境不推荐开启，可直接设置为null，
+
+  // 9. WebpackDevServer 开启前端服务器，模拟后端数据，解决跨域等
+  // 9.1 npm install webpack-dev-server -D
+  // 9.2 修改软连接：
+  // "server": "webpack-dev-server" 
+  // 启动服务后，会发现dist⽬录清空了，这是因为devServer把打包后的模块不会放在dist⽬录下，⽽是放到内存中，从⽽提升速度
+  // 9.3 配置：可以像前端框架一样发起监听
+  devServer: {
+    port: 5679,
+    open: true,
+    contentBase: './dist',
+    // 9.4 代理转发，解决跨域：
+    proxy: {
+      // 访问前端服务时，转到9092端口：
+      '/api': {
+        target: 'http://localhost:9092'
+      }
+    }
+  }
 }

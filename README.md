@@ -4,13 +4,17 @@
 ```shell
 $ npm install webpack webpack-cli -D
 ```
-- 查看项目中所安装的版本:
+- 查看项目中所安装的版本: npx在当前目录下查找webpak版本，不会全局去找
 ```shell
 $ npx webpack -v
 ```
 或直接指定`node_modules`文件夹对应文件查询:
 ```shell
 $ ./node_modules/.bin/webpack -v
+```
+cmd：
+```cmd
+> .\node_modules\.bin\webpack -v
 ```
 - 其他命令:
   - 查看webpack历史发布信息: `npm info webpack`

@@ -13,3 +13,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* 10. HMR 热模块更新: */
+div:nth-of-type(odd) {
+  background: yellow;
+}

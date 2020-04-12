@@ -3,6 +3,10 @@ const htmlWebpackPlugins = require('html-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const  MiniCssExtractPlugin = require('mini-css-extract-plugin')
 
+// 10. HMR热模块更新:
+const webpack = require('webpack')
+const { HotModuleReplacementPlugin } = webpack
+
 module.exports = {
   // 1. 入口文件
   // 1.1 单入口文件:
@@ -19,7 +23,9 @@ module.exports = {
     // filename: 'main.js',
     // 2.2 多入口文件: 使用占位符[name]对应entry.main, 若entry没有指定对象名字, 则默认打包成main.js
     // [hash:6]为版本控制的hash码, 6为指定位数, 如果某一源文件改动,hash码才会触发改动:
-    filename: '[name]-[chunkhash:6].js',
+    // filename: '[name]-[chunkhash:6].js',
+    // 10. HMR热模块更新不能用contenthash
+    filename: '[name].js'
     // filename: '[name].js'
   },
   // 3. 打包环境
@@ -119,7 +125,9 @@ module.exports = {
     new MiniCssExtractPlugin({
       // 7.1 contenthash, 内容变了hash值才会改变: 和chunkhash的区别, 因为css文件是从导入到index.js文件才能使用的, 如果index.js的内容发生改变, 导入在里面的css文件内容没变,css文件的hash值就不会改变
       filename: '[name]-[contenthash:6].css'
-    })
+    }),
+    // 10. HMR 热模块更新
+    new HotModuleReplacementPlugin()
   ],
   // 8. 开发工具，多用于定位源代码错误：
   // https://webpack.js.org/configuration/devtool#devtool
@@ -144,6 +152,9 @@ module.exports = {
       '/api': {
         target: 'http://localhost:9092'
       }
-    }
+    },
+    //10. Hot Module Replacement 热模块更新
+    hot: true,
+    hotOnly: true,
   }
 }
